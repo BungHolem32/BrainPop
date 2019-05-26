@@ -32,9 +32,93 @@ entities, using the Laravel PHP framework.
   authenticated users.
 
 ### Endpoints:
+```
 
-#### specific endpoints:
-  ```
+  AUTHENTICATION ENDPOINTS:
+  
+  1. {yourhost:post}/api/register
+  
+      Register new user (teacher or student) 
+   
+         Assumptions: 
+         1. teacher and student are users - with diffrent role
+         2. teacher has role_id 2
+         3. student has role_id 3 
+         
+         - Method: POST
+         - Params: 'Body' => ['username','password','full_name','role_id']
+   
+  2. {yourhost:post}/api/login  
+     
+     Login 
+  
+     - Method: POST
+     - Params: 'Body' => ['username','password']
+  
+  2. {yourhost:post}/api/logout  
+     
+     Logout 
+  
+     - Method: POST
+     - Params: `Query` => ['token'] valid jwt-token from login results
+
+CRUD ENDPOINTS:
+
+the following endpoint related to the 3 entities - you should choose one of the entities in each end point ex - /api/teachers for teachers
+
+1. {yourhost:post}/api/teachers|students|periods
+ 
+   Fetch all teachers|students|periods.
+   
+   - Method: GET
+   - Params: `Query` => ['token'] valid jwt-token from login results
+
+2. {yourhost:post}/api/teachers|students|periods/{teacher_id|student_id|teacher_id}
+
+    Fetch specific teacher|student|period according to his id.
+    
+    - Method: GET
+    - Params: `Url` => ['teacher_id'] integer, `Query` => ['token'] valid jwt-token from login results
+    
+3. {yourhost:post}/api/teachers|students|periods
+  
+   Store new teacher|student|period
+   
+   - Method: POST
+   - Params: `Body` => ['username','password','full_name','metadata["email"]'], `Query` => ['token'] valid jwt-token from login results
+  
+4. {yourhost:post}/api/teachers/{teacher_id|student_id|teacher_id} 
+  
+   Update teacher|student|period
+  
+  - Method: PUT
+  - Params: `Url` ['teacher_id'], `Body` => ['username','password','full_name','metadata["email"]'], `Query` => ['token'] valid jwt-token from login results
+  
+  
+5. {yourhost:post}/api/teachers|students|periods/{teacher_id|student_id|teacher_id}
+  
+   Destroy teacher|student|period
+   
+   - Method: DELETE
+   - Params: `Url` ['teacher_id'], `Query` => ['token'] valid jwt-token from login results
+   
+6. {yourhost:post}/api/periods/{period_id}/users/{user_id}   
+  
+   Attach user to period
+
+   - Method: POST
+   - Params: `Query` => ['token'] valid jwt-token from login results, `Body` => ['user_id','period_id'] 
+   
+7. {yourhost:post}/api/periods/{period_id}/users/{user_id}   
+  
+   Detach user from period
+
+   - Method: DELETE
+   - Params: `Query` => ['token'] valid jwt-token from login results, `Body` => ['user_id','period_id'] 
+   
+
+CUSTOM ENDPOINTS:
+
 1. {yourhost:port}/api/periods/{period_id}/students
    
     Fetch all students in a given period
@@ -56,47 +140,8 @@ entities, using the Laravel PHP framework.
     - Method: GET
     - Params: `Query` => ['token'] valid jwt-token from login results
 
-CRUD ENDPOINTS
-
-1. {yourhost:post}/api/teachers
- 
-   Fetch all teachers.
-   
-   - Method: GET
-   - Params: `Query` => ['token'] valid jwt-token from login results
-
-2. {yourhost:post}/api/teachers/{teacher_id}
-
-    Fetch specific teacher according to his id.
-    
-    - Method: GET
-    - Params: `Url` => ['teacher_id'] integer, `Query` => ['token'] valid jwt-token from login results
-    
-3. {yourhost:post}/api/teachers
-  
-   Store new teacher
-   
-   - Method: POST
-   - Params: `Body` => ['username','password','full_name','metadata["email"]'], `Query` => ['token'] valid jwt-token from login results
-  
-4. {yourhost:post}/api/teachers/{teacher_id} 
-  
-   Update teacher
-  
-  - Method: PUT
-  - Params: `Url` ['teacher_id'], `Body` => ['username','password','full_name','metadata["email"]'], `Query` => ['token'] valid jwt-token from login results
-  
-  
-5. {yourhost:post}/api/teachers/{teacher_id}
-  
-   Destroy teacher
-   
-   - Method: DELETE
-   - Params: `Url` ['teacher_id'], `Query` => ['token'] valid jwt-token from login results
    ```
-   
-   
-
+      
 ### How To Use:
 
 - open terminal
