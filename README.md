@@ -31,6 +31,71 @@ entities, using the Laravel PHP framework.
 - With the exception of create teacher and student, all endpoints are limited to
   authenticated users.
 
+### Endpoints:
+
+#### specific endpoints:
+  ```
+1. {yourhost:port}/api/periods/{period_id}/students
+   
+    Fetch all students in a given period
+   
+    - Method: GET
+    - Params: `Query`=> ['period_id'] integer, `Query` => ['token'] valid jwt-token from login results
+ 
+2. `{yourhost:port}/api/teachers/{teacher_id}/periods` 
+
+    Fetch all periods associated with a given teacher
+    
+    - Method: GET
+    - Params: `Url` => ['teacher_id'] integer, `Query` => ['token'] valid jwt-token from login results
+ 
+3. `{yourhost:port}/api/linked_users` 
+    
+    Fetch all students that are linked to a teacher via period
+
+    - Method: GET
+    - Params: `Query` => ['token'] valid jwt-token from login results
+
+CRUD ENDPOINTS
+
+1. `localhost/api/teachers`
+ 
+   Fetch all teachers.
+   
+   - Method: GET
+   - Params: `Query` => ['token'] valid jwt-token from login results
+
+2. `localhost/api/teachers/{teacher_id}`
+
+    Fetch specific teacher according to his id.
+    
+    - Method: GET
+    - Params: `Url` => ['teacher_id'] integer, `Query` => ['token'] valid jwt-token from login results
+    
+3. `localhost/api/teachers`
+  
+   Store new teacher
+   
+   - Method: POST
+   - Params: `Body` => ['username','password','full_name','metadata["email"]'], `Query` => ['token'] valid jwt-token from login results
+  
+4. `localhost/api/teachers/{teacher_id}` 
+  
+   Update teacher
+  
+  - Method: PUT
+  - Params: `Url` ['teacher_id'], `Body` => ['username','password','full_name','metadata["email"]'], `Query` => ['token'] valid jwt-token from login results
+  
+  
+5. `localhost/api/teachers/{teacher_id}` 
+  
+   Destroy teacher
+   
+   - Method: Delete
+   - Params: `Url` ['teacher_id'], `Query` => ['token'] valid jwt-token from login results
+   ```
+   
+   
 
 ### How To Use:
 
@@ -88,18 +153,3 @@ JWT_SECRET=z1vn8ZLxTeSYMdQOwOHajPER3bgih47xp8N9DpSxpxPSuWQfvRjUvq4f4beyuW5D
 - for migration and seeds type `artisan migrate --seed`
 - you are ready to go
 
-
-Endpoints:
-
-CRUDS
-
-- Teachers:
-
-   - `api/teachers`   
-  
-  
-  
-- `{yourhost:port}/api/periods/{period_id}/students` -> Fetch all students in a given period
-- `{yourhost:port}/api/teachers/{teacher_id}/periods` -> Fetch all periods associated with a given teacher
-- `localhost/api/linked_users` -> Fetch all students that are linked to a teacher via period
-- 
