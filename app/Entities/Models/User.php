@@ -56,7 +56,6 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-
         return [
             'role_id' => auth()->user()->role_id ?? ''
         ];
@@ -121,5 +120,16 @@ class User extends Authenticatable implements JWTSubject
     public function ScopeWhereRoleId($query, $role_id)
     {
         return $query->where('role_id', $role_id);
+    }
+
+    /**
+     * @param $query
+     * @param $id
+     *
+     * @return mixed
+     */
+    public function ScopeWhereId($query, $id)
+    {
+        return $query->where('id', $id);
     }
 }

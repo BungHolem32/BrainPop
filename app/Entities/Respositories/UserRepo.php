@@ -41,7 +41,7 @@ class UserRepo extends Repository
      */
     public function getByRoleId($role_id)
     {
-        return $this->query()->where('role_id', $role_id)->get();
+        return $this->query()->whereRoleId($role_id)->get();
     }
 
     /**
@@ -53,8 +53,8 @@ class UserRepo extends Repository
     public function getByRoleIdAndId($role_id, $user_id)
     {
         return $this->query()
-            ->where('role_id', $role_id)
-            ->where('id', $user_id)
+            ->whereRoleId($role_id)
+            ->whereId($user_id)
             ->get()
             ->first();
     }

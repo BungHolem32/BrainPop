@@ -20,5 +20,4 @@ class TeacherController extends UserController
      * @var array validation fields
      */
     protected $fields = ['username', 'password', 'full_name', 'metadata'];
-
 }

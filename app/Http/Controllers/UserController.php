@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Entities\Models\User;
 use App\Entities\Repositories\UserMetadataRepo;
 use App\Entities\Repositories\UserRepo;
@@ -161,14 +160,16 @@ class UserController extends Controller
 
 
     /**
-     * @param $request
+     * @param Request $request
      *
      * @return bool
      */
     public function storeUser($request)
     {
-        $fields            = $request->all();
+        $fields            = $request->all($this->fields);
+        $saved_metadata    = [];
         $fields['role_id'] = $this->role_id;
+        $model             = false;
 
         $saved_teacher = $this->model_repo->store($fields);
 
@@ -176,8 +177,10 @@ class UserController extends Controller
             $saved_metadata = $this->metadata_model_repo->storeMetadata($saved_teacher, $fields);
         }
 
-        $model                       = $saved_teacher->toArray();
-        $model[$saved_metadata->key] = $saved_metadata->value;
+        if (count($saved_metadata)) {
+            $model                       = $saved_teacher->toArray();
+            $model[$saved_metadata->key] = $saved_metadata->value;
+        }
 
         return $model;
     }
@@ -197,7 +200,6 @@ class UserController extends Controller
         }
 
         $fields_to_update = $this->prepareFields($request);
-
         $updated_user = $user->update($fields_to_update);
 
         if (!$updated_user) {
@@ -208,7 +210,6 @@ class UserController extends Controller
         if (!$updated_metadata) {
             return false;
         }
-
         $updated_model                         = $user->toArray();
         $updated_model[$updated_metadata->key] = $updated_metadata->value;
 
@@ -280,9 +281,14 @@ class UserController extends Controller
         return $user;
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return mixed
+     */
     private function prepareFields($request)
     {
-        $fields_to_update = $request->all();
+        $fields_to_update = $request->only($this->fields);
 
         if (!empty($fields_to_update['password'])) {
             $fields_to_update['password'] = bcrypt($fields_to_update['password']);
@@ -292,5 +298,4 @@ class UserController extends Controller
 
         return $fields_to_update;
     }
-
 }
