@@ -42,122 +42,25 @@ entities, using the Laravel PHP framework.
  - admin can do anything.
  - role ids added for compatible (1 -admin , 2- teacher ,3 - user )
  
-### Endpoints:
-```
-  AUTHENTICATION ENDPOINTS:
-  
-  1. {yourhost:post}/api/register
-  
-      Register new user (teacher or student) 
-   
-         Assumptions: 
-         1. teacher and student are users - with diffrent role
-         2. teacher has role_id 2
-         3. student has role_id 3 
-         
-         - Method: POST
-         - Params: 'Body' => ['username','password','full_name','role_id']
-   
-  2. {yourhost:post}/api/login  
-     
-     Login 
-  
-     - Method: POST
-     - Params: 'Body' => ['username','password']
-  
-  2. {yourhost:post}/api/logout  
-     
-     Logout 
-  
-     - Method: POST
-     - Params: `Query` => ['token'] valid jwt-token from login results
+Click on the following [link](https://documenter.getpostman.com/view/895124/S1TR6La3?version=latest#intro) to see api documentations
 
-CRUD ENDPOINTS:
+### Installation:
 
-the following endpoint related to the 3 entities - you should choose one of the entities in each end point ex - /api/teachers for teachers
+#### Summary: 
 
-1. {yourhost:post}/api/teachers|students|periods
- 
-   Fetch all teachers|students|periods.
-   
-   - Method: GET
-   - Params: `Query` => ['token'] valid jwt-token from login results
-
-2. {yourhost:post}/api/teachers|students|periods/{teacher_id|student_id|teacher_id}
-
-    Fetch specific teacher|student|period according to his id.
+1.  this project was build with the following: 
+    - Laravel framework
+    - Laradock - A full PHP development environment for Docker
     
-    - Method: GET
-    - Params: `Url` => ['teacher_id'] integer, `Query` => ['token'] valid jwt-token from login results
-    
-3. {yourhost:post}/api/teachers|students|periods
-  
-   Store new teacher|student|period
-   
-   - Method: POST
-   - Params: `Body` => ['username','password','full_name','metadata["email"]'], `Query` => ['token'] valid jwt-token from login results
-  
-4. {yourhost:post}/api/teachers/{teacher_id|student_id|teacher_id} 
-  
-   Update teacher|student|period
-  
-  - Method: PUT
-  - Params: `Url` ['teacher_id'], `Body` => ['username','password','full_name','metadata["email"]'], `Query` => ['token'] valid jwt-token from login results
-  
-  
-5. {yourhost:post}/api/teachers|students|periods/{teacher_id|student_id|teacher_id}
-  
-   Destroy teacher|student|period
-   
-   - Method: DELETE
-   - Params: `Url` ['teacher_id'], `Query` => ['token'] valid jwt-token from login results
-   
-6. {yourhost:post}/api/periods/{period_id}/users/{user_id}   
-  
-   Attach user to period
+    For more information on how to install it, follow this [link](https://laradock.io/getting-started/) 
 
-   - Method: POST
-   - Params: `Query` => ['token'] valid jwt-token from login results, `Body` => ['user_id','period_id'] 
-   
-7. {yourhost:post}/api/periods/{period_id}/users/{user_id}   
-  
-   Detach user from period
-
-   - Method: DELETE
-   - Params: `Query` => ['token'] valid jwt-token from login results, `Body` => ['user_id','period_id'] 
-   
-
-CUSTOM ENDPOINTS:
-
-1. {yourhost:port}/api/periods/{period_id}/students
-   
-    Fetch all students in a given period
-   
-    - Method: GET
-    - Params: `Query`=> ['period_id'] integer, `Query` => ['token'] valid jwt-token from login results
- 
-2. {yourhost:port}/api/teachers/{teacher_id}/periods
-
-    Fetch all periods associated with a given teacher
-    
-    - Method: GET
-    - Params: `Url` => ['teacher_id'] integer, `Query` => ['token'] valid jwt-token from login results
- 
-3. {yourhost:port}/api/linked_users
-    
-    Fetch all students that are linked to a teacher via period
-
-    - Method: GET
-    - Params: `Query` => ['token'] valid jwt-token from login results
-
-   ```
-      
-### How To Use:
+In case you want insert this project inside your local environment follow these steps:
 
 - open terminal
 - cd into your selected project folder
 - clone git repository by typing -> `git clone https://github.com/BungHolem32/BrainPop.git`
-- type `cp .env.exmple .env`
+- type `cp .env.example .env`
+- edit your db setting  in the '.env' file
 
 ```
 APP_NAME=BrainPop
@@ -202,9 +105,10 @@ MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 
 JWT_SECRET=z1vn8ZLxTeSYMdQOwOHajPER3bgih47xp8N9DpSxpxPSuWQfvRjUvq4f4beyuW5D
 ```
-- edit your info in the '.env' file
-- you will need to create database according to your setting below
+
+- create database name according to the setting below
 - type composer install
-- for migration and seeds type `artisan migrate --seed`
-- you are ready to go
+- migrate all tables, seed some data by typing `artisan migrate --seed`
+- type `artisan serve`
+- click on this  [http://localhost:8000](http://localhost:8000]) and you ready to go.
 
