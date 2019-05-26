@@ -52,7 +52,7 @@ Click on the following [link](https://documenter.getpostman.com/view/895124/S1TR
     - Laravel framework
     - Laradock - A full PHP development environment for Docker
     
-    For more information on how to install it, follow this [link](https://laradock.io/getting-started/) 
+    For more information on how to install Laradock, follow this [link](https://laradock.io/getting-started/) 
 
 In case you want insert this project inside your local environment follow these steps:
 
