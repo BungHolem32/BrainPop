@@ -42,14 +42,14 @@ entities, using the Laravel PHP framework.
     - Method: GET
     - Params: `Query`=> ['period_id'] integer, `Query` => ['token'] valid jwt-token from login results
  
-2. `{yourhost:port}/api/teachers/{teacher_id}/periods` 
+2. {yourhost:port}/api/teachers/{teacher_id}/periods
 
     Fetch all periods associated with a given teacher
     
     - Method: GET
     - Params: `Url` => ['teacher_id'] integer, `Query` => ['token'] valid jwt-token from login results
  
-3. `{yourhost:port}/api/linked_users` 
+3. {yourhost:port}/api/linked_users
     
     Fetch all students that are linked to a teacher via period
 
@@ -58,28 +58,28 @@ entities, using the Laravel PHP framework.
 
 CRUD ENDPOINTS
 
-1. `localhost/api/teachers`
+1. {yourhost:post}/api/teachers
  
    Fetch all teachers.
    
    - Method: GET
    - Params: `Query` => ['token'] valid jwt-token from login results
 
-2. `localhost/api/teachers/{teacher_id}`
+2. {yourhost:post}/api/teachers/{teacher_id}
 
     Fetch specific teacher according to his id.
     
     - Method: GET
     - Params: `Url` => ['teacher_id'] integer, `Query` => ['token'] valid jwt-token from login results
     
-3. `localhost/api/teachers`
+3. {yourhost:post}/api/teachers
   
    Store new teacher
    
    - Method: POST
    - Params: `Body` => ['username','password','full_name','metadata["email"]'], `Query` => ['token'] valid jwt-token from login results
   
-4. `localhost/api/teachers/{teacher_id}` 
+4. {yourhost:post}/api/teachers/{teacher_id} 
   
    Update teacher
   
@@ -87,11 +87,11 @@ CRUD ENDPOINTS
   - Params: `Url` ['teacher_id'], `Body` => ['username','password','full_name','metadata["email"]'], `Query` => ['token'] valid jwt-token from login results
   
   
-5. `localhost/api/teachers/{teacher_id}` 
+5. {yourhost:post}/api/teachers/{teacher_id}
   
    Destroy teacher
    
-   - Method: Delete
+   - Method: DELETE
    - Params: `Url` ['teacher_id'], `Query` => ['token'] valid jwt-token from login results
    ```
    
