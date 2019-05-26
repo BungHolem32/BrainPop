@@ -31,9 +31,19 @@ entities, using the Laravel PHP framework.
 - With the exception of create teacher and student, all endpoints are limited to
   authenticated users.
 
+
+### Basic Assumptions:
+ - all requests except authentication endpoints required jwt-token authentication.
+ - user first need to register , then login , and from then need to add jwt token in each request.
+ - teachers and student can see all periods.
+ - teachers can add new period.
+ - each period has teacher_id related to him so he can edit each period that assigned to him
+ - student can add and remove them-self from period.
+ - admin can do anything.
+ - role ids added for compatible (1 -admin , 2- teacher ,3 - user )
+ 
 ### Endpoints:
 ```
-
   AUTHENTICATION ENDPOINTS:
   
   1. {yourhost:post}/api/register
