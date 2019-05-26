@@ -54,7 +54,7 @@ Click on the following [link](https://documenter.getpostman.com/view/895124/S1TR
     
     For more information on how to install Laradock, follow this [link](https://laradock.io/getting-started/) 
 
-In case you want insert this project inside your local environment follow these steps:
+In case you want to insert this project inside your local environment follow these steps:
 
 - open terminal
 - cd into your selected project folder
