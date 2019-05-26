@@ -6,8 +6,6 @@ use App\Entities\Models\Period;
 use App\Entities\Repositories\PeriodsRepo;
 use App\Http\Requests\PeriodRequest;
 use App\Http\Traits\JsonResponseTrait;
-use JWTAuth;
-
 
 /**
  * @property PeriodsRepo model_repo
@@ -22,7 +20,7 @@ class PeriodController extends Controller
     public function __construct()
     {
         $this->model_repo = new PeriodsRepo();
-        $this->user       = JWTAuth::parseToken()->authenticate();
+        $this->assignUser();
     }
 
     /**

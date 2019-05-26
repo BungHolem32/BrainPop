@@ -25,6 +25,7 @@ class UserPeriodController extends Controller
         $this->period_repo      = new PeriodsRepo();
         $this->user_repo        = new UserRepo();
         $this->user_period_repo = new UserPeriodRepo();
+        $this->assignUser();
     }
 
     /**
@@ -58,7 +59,7 @@ class UserPeriodController extends Controller
             'status' => 'error',
             'method' => 'getLinkedUsers',
         ], null);
-        $linked_users         = $this->user_period_repo->getLinkedUsers();
+        $linked_users  = $this->user_period_repo->getLinkedUsers();
 
         if ($linked_users->count()) {
             $json_response = $this->handleResponse([

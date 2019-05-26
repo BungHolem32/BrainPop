@@ -12,18 +12,22 @@ class UserMetadataRepo extends Repository
     /**
      * @param $user
      * @param $fields
+     *
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection | bool
      */
     public function storeMetadata($user, $fields)
     {
         if (empty($fields['metadata'])) {
-            return;
+            return false;
         }
 
-        $data    = $this->prepare($fields, $user);
-        $model   = $this->model();
-        $results = $model->insert($data);
+        $data   = $this->prepare($fields, $user);
+        $model  = $this->model();
+        $result = $model->insert($data);
 
-        return $results;
+        if ($result) {
+            return $this->getMetaDataByUserId($user->id);
+        }
     }
 
     public function updateMetadata($user, $fields)
@@ -50,5 +54,40 @@ class UserMetadataRepo extends Repository
         }
 
         return $data;
+    }
+
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    private function getMetaDataByUserId($id)
+    {
+        return $this->query()
+            ->where('user_id', $id)
+            ->get()
+            ->last();
+    }
+
+    /**
+     * @param $role_id
+     *
+     * @return mixed
+     */
+    public function getByRoleId($role_id)
+    {
+        return $this->query()->whereRoleId($role_id)->get();
+    }
+
+
+    /**
+     * @param $user_id
+     * @param $role_id
+     *
+     * @return mixed
+     */
+    public function getRoleIdAndId($user_id, $role_id)
+    {
+        return $this->query()->where('user_id', $user_id)->whereRoleId($role_id)->get()->first();
     }
 }

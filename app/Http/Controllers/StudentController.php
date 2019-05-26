@@ -1,18 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Entities\Repositories\UserRepo;
-use App\Http\Controllers\UserController;
 
 /**
  * @property UserRepo model_repo
  */
 class StudentController extends UserController
 {
+    /**
+     * @var int $role_id related to roles table
+     */
     protected $role_id = 3;
 
-    public function getStudentsByPeriod(){
-
-    }
+    /**
+     * @var array validation fields
+     */
+    protected $fields = ['username', 'password', 'full_name', 'metadata'];
 }

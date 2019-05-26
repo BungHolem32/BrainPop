@@ -1,7 +1,7 @@
 <?php
 
 return [
-    "success" => [
+    "success"   => [
         "index"                 => ["message" => "records return successful", "status" => 200],
         "show"                  => ["message" => "record with the id %d returned successfully", "status" => 200],
         "update"                => ["message" => "we successfully  update the record with the id %d", "status" => 201],
@@ -41,7 +41,7 @@ return [
         ]
 
     ],
-    "error"   => [
+    "error"     => [
         "index"                 => ["message" => "no records found", "status" => 400],
         "show"                  => ["message" => "no record found", "status" => 404],
         "update"                => ["message" => "we failed to update the record with the id %d", "status" => 404],
@@ -86,5 +86,11 @@ return [
             "status"  => 401
         ]
 
+    ],
+    'no_fields' => [
+        'update' => [
+            'message' => 'no fields to update',
+            'status'  => 401
+        ]
     ]
 ];

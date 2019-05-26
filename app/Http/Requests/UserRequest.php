@@ -10,6 +10,8 @@ namespace App\Http\Requests;
  */
 class UserRequest extends CustomRequest
 {
+
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -36,8 +38,10 @@ class UserRequest extends CustomRequest
                 return $this->getShowNDestroyParams($role_id);
 
             case 'store':
+                return $this->getStoreParams($role_id);
+
             case 'update':
-                return $this->getStoreNUpdateParams($role_id);
+                return $this->getUpdateParams($role_id);
 
             case 'getPeriods':
                 return $this->getGetPeriodsParams();
@@ -52,7 +56,7 @@ class UserRequest extends CustomRequest
      *
      * @return array
      */
-    private function getStoreNUpdateParams($role_id)
+    private function getStoreParams($role_id)
     {
         $params = [
             'username'  => 'required|string|unique:users',
@@ -67,6 +71,32 @@ class UserRequest extends CustomRequest
         }
 
         $params['metadata.grade'] = 'required|integer|grade|between:0,12';
+
+        return $params;
+
+    }
+
+    /**
+     * @param $role_id
+     *
+     * @return array
+     */
+    private function getUpdateParams($role_id)
+    {
+        $params = [
+            'username'   => 'string',
+            'password'   => 'string',
+            'full_name'  => 'string',
+            'metadata'   => 'array',
+            'teacher_id' => 'required|exists:users,id'
+        ];
+        if ($role_id == 2) {
+            $params['metadata.email'] = 'email';
+
+            return $params;
+        }
+
+        $params['metadata.grade'] = 'integer|grade|between:0,12';
 
         return $params;
 
@@ -107,6 +137,22 @@ class UserRequest extends CustomRequest
         return [
             'teacher_id' => 'required|integer|exists:users,id',
             'period_id'  => 'required|integer|exists:periods,id',
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        $validation_messages = ['exists' => 'this %s id doesn\'t exist in the %s table'];
+
+        return [
+            'teacher_id.exists' => sprintf($validation_messages['exists'], 'teacher', 'users'),
+            'period_id.exists'  => sprintf($validation_messages['exists'], 'period', 'periods'),
+            'student_id.exists' => sprintf($validation_messages['exists'], 'student', 'users')
         ];
     }
 }

@@ -31,6 +31,8 @@ class AuthRequest extends CustomRequest
                 return $this->getLoginFields();
             case 'logout':
                 return $this->getLogoutFields();
+            case 'getAuthUser':
+                return $this->getAuthUserFields();
         }
 
     }
@@ -76,6 +78,13 @@ class AuthRequest extends CustomRequest
     {
         return [
             'token' => 'required'
+        ];
+    }
+
+    private function getAuthUserFields()
+    {
+        return [
+            "token" => 'required'
         ];
     }
 }

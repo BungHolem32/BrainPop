@@ -50,7 +50,7 @@ class UserRepo extends Repository
      *
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function getByRoleIdAndId(int $role_id, $user_id)
+    public function getByRoleIdAndId($role_id, $user_id)
     {
         return $this->query()
             ->where('role_id', $role_id)
@@ -70,4 +70,5 @@ class UserRepo extends Repository
             ->whereIn('id', $ids)
             ->get();
     }
+
 }

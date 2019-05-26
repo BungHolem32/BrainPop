@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 
+use App\Entities\Models\User;
 use App\Entities\Repositories\UserMetadataRepo;
 use App\Entities\Repositories\UserRepo;
 use App\Http\Requests\UserRequest;
 use App\Http\Traits\JsonResponseTrait;
-use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use JWTAuth;
 
 /**
@@ -16,6 +17,7 @@ use JWTAuth;
  * @property UserMetadataRepo metadata_model_repo
  * @property  User            user
  * @property  integer         role_id
+ * @property  array           fields
  */
 class UserController extends Controller
 {
@@ -23,12 +25,14 @@ class UserController extends Controller
 
     protected $role_id;
 
+    /**
+     * UserController constructor.
+     */
     public function __construct()
     {
         $this->model_repo          = new UserRepo();
         $this->metadata_model_repo = (new UserMetadataRepo());
-        $this->user                = JWTAuth::parseToken()->authenticate();
-
+        $this->assignUser();
     }
 
     /**
@@ -38,11 +42,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user          = $this->model_repo->getByRoleId($this->role_id);
+        $users         = $this->getUsersAndMetadataByRole($this->role_id);
         $json_response = $this->handleResponse(['status' => 'error', 'method' => 'index'], null);
 
-        if (count($user)) {
-            $json_response = $this->handleResponse(["status" => 'success', "method" => 'index'], $user);
+        if (count($users)) {
+            $json_response = $this->handleResponse(["status" => 'success', "method" => 'index'], $users);
         }
 
         return response()->json($json_response, $json_response["status"]);
@@ -57,11 +61,12 @@ class UserController extends Controller
      */
     public function show(UserRequest $request)
     {
-        $user_id       = (array_values($request->route()->parameters()))[0];
+        $user_id       = array_values($request->route()->parameters())[0];
         $json_response = $this->handleResponse(["status" => 'error', "method" => 'show', "id" => $user_id], null);
-        $user          = $this->model_repo->getByRoleIdAndId($this->role_id, $user_id);
+        $user          = $this->getUserByRoleId($user_id, $this->role_id);
 
-        if ($user->exists) {
+
+        if (!empty($user) && $user->exists) {
             $json_response = $this->handleResponse(["status" => 'success', "method" => 'show', "id" => $user->id],
                 $user);
         }
@@ -86,7 +91,7 @@ class UserController extends Controller
             $json_response = $this->handleResponse([
                 "status" => 'success',
                 "method" => 'store',
-                "id"     => $saved_model->id
+                "id"     => $saved_model['id']
             ],
                 $saved_model);
         }
@@ -104,8 +109,14 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, $id)
     {
-        $json_response = $this->handleResponse(["status" => 'error', "method" => 'update', "id" => $id], null);
-        $updated_model = $this->updateUser($request, $id);
+        $updated_model = false;
+        $json_response = $this->handleResponse(["status" => 'no_fields', "method" => 'update', "id" => $id], null);
+        $params        = $request->only($this->fields);
+
+        if (count($params)) {
+            $json_response = $this->handleResponse(["status" => 'error', "method" => 'update', "id" => $id], null);
+            $updated_model = $this->updateUser($request, $id);
+        }
 
         if ($updated_model) {
             $json_response = $this->handleResponse([
@@ -159,11 +170,10 @@ class UserController extends Controller
         $fields            = $request->all();
         $fields['role_id'] = $this->role_id;
 
-        $saved_teacher  = $this->model_repo->store($fields);
-        $saved_metadata = $this->metadata_model_repo->storeMetadata($saved_teacher, $fields);
+        $saved_teacher = $this->model_repo->store($fields);
 
-        if (!$saved_metadata || !$saved_metadata) {
-            return false;
+        if ($saved_teacher) {
+            $saved_metadata = $this->metadata_model_repo->storeMetadata($saved_teacher, $fields);
         }
 
         $model                       = $saved_teacher->toArray();
@@ -176,18 +186,18 @@ class UserController extends Controller
      * @param Request $request
      * @param         $id
      *
-     * @return
+     * @return bool
      */
     public function updateUser($request, $id)
     {
-        $fields_to_update             = $request->all();
-        $fields_to_update['password'] = bcrypt($fields_to_update['password']);
-        $fields_to_update['role_id']  = $this->role_id;
-        $user                         = $this->model_repo->find($id);
+        $user = $this->model_repo->find($id);
 
         if (!$user->exists) {
             return false;
         }
+
+        $fields_to_update = $this->prepareFields($request);
+
         $updated_user = $user->update($fields_to_update);
 
         if (!$updated_user) {
@@ -198,6 +208,7 @@ class UserController extends Controller
         if (!$updated_metadata) {
             return false;
         }
+
         $updated_model                         = $user->toArray();
         $updated_model[$updated_metadata->key] = $updated_metadata->value;
 
@@ -219,4 +230,67 @@ class UserController extends Controller
     {
         $this->role_id = $role_id;
     }
+
+    /**
+     * @param int $role_id
+     *
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    private function getUsersAndMetadataByRole(int $role_id)
+    {
+        $users          = $this->model_repo->getByRoleId($role_id);
+        $users_metadata = $this->metadata_model_repo->getByRoleId($role_id);
+
+        $this->combineUserAndUserMetadata($users, $users_metadata);
+
+        return $users;
+    }
+
+    /**
+     * @param Collection $users
+     * @param Collection $users_metadata
+     */
+    private function combineUserAndUserMetadata($users, $users_metadata)
+    {
+        $users_metadata = $users_metadata->keyBy('user_id');
+
+        $users->transform(function ($user) use ($users_metadata) {
+            $user_metadata               = $users_metadata[$user->id];
+            $user->{$user_metadata->key} = $user_metadata->value;
+
+            return $user;
+        });
+    }
+
+    /**
+     * @param $user_id
+     * @param $role_id
+     *
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    private function getUserByRoleId($user_id, $role_id)
+    {
+        $user_metadata = $this->metadata_model_repo->getRoleIdAndId($role_id, $user_id);
+        $user          = $this->model_repo->getByRoleIdAndId($user_id, $role_id);
+
+        if ($user_metadata && $user) {
+            $user->{$user_metadata->key} = $user_metadata->value;
+        }
+
+        return $user;
+    }
+
+    private function prepareFields($request)
+    {
+        $fields_to_update = $request->all();
+
+        if (!empty($fields_to_update['password'])) {
+            $fields_to_update['password'] = bcrypt($fields_to_update['password']);
+        }
+
+        $fields_to_update['role_id'] = $this->role_id;
+
+        return $fields_to_update;
+    }
+
 }

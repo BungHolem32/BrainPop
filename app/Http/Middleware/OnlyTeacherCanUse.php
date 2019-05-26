@@ -28,7 +28,7 @@ class OnlyTeacherCanUse extends BaseMiddleware
             ]);
         }
 
-        if (!empty($params) && !empty($params['period_id'])) {
+        if (!empty($params) && !empty($params['period_id']) ) {
             $period = (new PeriodsRepo())->find($params['period_id']);
             if ($user->id != $period->teacher_id && $user->role->id != 1) {
                 return response()->json([

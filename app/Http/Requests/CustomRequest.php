@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Traits\ParameterValidationTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -10,7 +9,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CustomRequest extends FormRequest
 {
-    use ParameterValidationTrait;
 
     protected function failedValidation(Validator $validator)
     {
@@ -20,4 +18,16 @@ class CustomRequest extends FormRequest
             "errors" => $validator->errors(),
         ], 422));
     }
+
+    /**
+     * @return array
+     */
+    protected function validationData()
+    {
+        $data = $this->all();
+        $data = array_merge($data, $this->route()->parameters);
+
+        return $data;
+    }
+
 }

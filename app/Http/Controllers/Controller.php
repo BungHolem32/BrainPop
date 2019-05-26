@@ -2,12 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use JWTAuth;
+
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    /**
+     * @return string
+     */
+    public function assignUser()
+    {
+        //handle the issue with artisan cli (only run if the done from the web)
+        if (strpos(php_sapi_name(), 'cli') === false) {
+            $this->user = JWTAuth::parseToken()->authenticate();
+        }
+    }
 }

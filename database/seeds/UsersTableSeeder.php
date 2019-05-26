@@ -37,7 +37,7 @@ class UsersTableSeeder extends Seeder
                 'metadata'  => ['grade' => 8]
             ],
             [
-                'role_id'   => '2',
+                'role_id'   => '1',
                 'username'  => 'teacherAdmin3',
                 'password'  => 'teacherAdmin3',
                 "full_name" => 'teacherAdminFullName3'

@@ -20,4 +20,17 @@ class UserMetadata extends Model
      * @var string
      */
     protected $table = 'user_metadata';
+
+
+    /**
+     * @param $query
+     * @param $role_id
+     *
+     * @return mixed
+     */
+    public function ScopeWhereRoleId($query, $role_id)
+    {
+        return $query->where('role_id', $role_id);
+    }
+
 }
