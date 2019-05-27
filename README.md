@@ -33,15 +33,29 @@ entities, using the Laravel PHP framework.
 
 
 ### Basic Assumptions:
- - all requests except authentication endpoints required jwt-token authentication.
- - user first need to register , then login , and from then need to add jwt token in each request.
- - teachers and student can see all periods.
- - teachers can add new period.
+ - All requests except authentication endpoints required jwt-token authentication.
  - each period has teacher_id related to him so he can edit each period that assigned to him
- - student can add and remove them-self from period.
- - admin can do anything.
  - role ids added for compatible (1 -admin , 2- teacher ,3 - user )
  
+### Permissions:
+Users:
+- Teacher can: 
+  
+  - see all periods attached to him.
+  - manipulate his own period.
+  - manipulate his own entity. (teacher) 
+
+- Student can:
+
+  - manipulate his own entity.
+  - add himself into a period.
+  - remove himself from a period.
+    
+- Admin can:
+  - do anything.  
+  
+### Api documentation:  
+
 Click on the following [link](https://documenter.getpostman.com/view/895124/S1TR6La3?version=latest#intro) to see api documentations
 
 ### Installation:
